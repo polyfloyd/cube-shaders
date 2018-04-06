@@ -180,9 +180,9 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 		-sin(r), 0.0, cos(r)
 	);
 	model = model * mat3(
-		cos(r),  sin(r), 0.0,
-		-sin(r), cos(r), 0.0,
-		0.0,     0.0,    1.0
+		1.0, 0.0,     0.0,
+		0.0, cos(r),  sin(r),
+		0.0, -sin(r), cos(r)
 	);
 	eye = eye * model;
 	dir = dir * model;
