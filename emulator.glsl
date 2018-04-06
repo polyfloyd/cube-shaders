@@ -163,6 +163,12 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
 	return color;
 }
 
+vec3 background(vec2 coord) {
+	float s = 12;
+	float c = step(mod(coord.x * s + step(mod(coord.y * s, 2), 1), 2), 1);
+	return vec3(c * 0.5);
+}
+
 void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 	vec3 dir = rayDirection(45.0, iResolution.xy, fragCoord);
 	vec3 eye = vec3(0.0, 0.0, 5.0);
@@ -185,7 +191,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
 
 	if (dist > MAX_DIST - EPSILON) {
 		// Didn't hit anything
-		fragColor = vec4(0.0, 0.0, 0.0, 0.0);
+		float s = max(iResolution.y, iResolution.y);
+		fragColor = vec4(background(fragCoord / s), 1.0);
 		return;
 	}
 
