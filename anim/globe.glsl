@@ -8,7 +8,8 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	fragColor = texture2D(surface, vec2(-uv.x + -t, uv.y));
 }
 
-//void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-//	mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
-//}
-#pragma use "../emulator.glsl"
+#ifndef _EMULATOR
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+	mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
+}
+#endif

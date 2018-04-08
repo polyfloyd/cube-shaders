@@ -1,4 +1,27 @@
-// Based upon: http://jamie-wong.com/2016/07/15/ray-marching-signed-distance-functions/
+// This file implements an emulator for a LED-Panel cube.
+//
+// The renderer is based upon this ray marching tutorial:
+//   http://jamie-wong.com/2016/07/15/ray-marching-signed-distance-functions/
+//
+// To use:
+//
+// 1. define the special rendering function:
+//
+//   void mainCube(out vec4 fragColor, in vec3 fragCoord);
+//
+// 2. Define the mainImage function with include guard:
+//
+//   #ifndef _EMULATOR
+//   void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+//       mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
+//   }
+//   #endif
+//
+// 3. Include the emulator by prepending a separate -i option on the Shady command line:
+//
+//   shady -i emulator.glsl -i my-animation.glsl <other options>
+
+#define _EMULATOR
 
 // Forward declaration of the function that renders the surface of the cube.
 void mainCube(out vec4 fragColor, in vec3 fragCoord);

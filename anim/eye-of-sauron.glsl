@@ -137,51 +137,6 @@ vec3 FlameColour(float f) {
 	return min(vec3(f+.8, f*f*1.4+.05, f*f*f*.6) * f, 1.0);
 }
 
-//void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-//	vec4 d3 = vec4(cube_map_to_3d(fragCoord) * 2.0 - 1, 0);
-//	d3 = d3 * gyros;
-//	vec2 uv = map_to_sphere_uv(d3.xyz);
-//	uv.x *= 2.0;
-//	uv.x += 0.5;
-//
-//	flareUp = max(sin(gTime*.75+3.5), 0.0);
-//	vec2 p = -1.0 + 2.0 * uv;
-//	p.x *= iResolution.x/iResolution.y;
-//
-//	vec3 origin = vec3(0, -10, -20);
-//	vec3 target = vec3(0.0, 0.0, 0.0);
-//
-//	// Make camera ray using origin and target positions...
-//	vec3 cw = normalize( target-origin);
-//	vec3 cp = vec3(0.0, 1.0, 0.0);
-//	vec3 cu = normalize( cross(cw, cp) );
-//	vec3 cv = ( cross(cu,cw) );
-//	vec3 ray = normalize(p.x*cu + p.y*cv + 1.5 * cw );
-//
-//	float pupil = 0.0;
-//	vec4 ret = Raymarch(origin, ray, fragCoord, pupil);
-//	vec3 col = vec3(0.0);
-//
-//	vec3 light = vec3(0.0, 4.0, -4.0);
-//	// Do the lightning flash effect...
-//	float t = mod(gTime+3.0, 13.0);
-//	float flash = smoothstep(0.4, .0, t);
-//	flash += smoothstep(0.2, .0, abs(t-.6)) * 1.5;
-//	flash += smoothstep(0.7, .8, t) * smoothstep(1.3, .8, t);
-//	flash *= 2.2;
-//
-//	col += FlameColour(ret.w);
-//	col = mix (col, vec3(0.0), min(pupil, 1.0));
-//
-//	// Contrasts...
-//	col = sqrt(col);
-//	col = min(mix(vec3(length(col)),col, 1.22), 1.0);
-//	col += col * .3;
-//
-//	fragColor = vec4(min(col, 1.0),1.0);
-//}
-
-
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 //	fragCoord = fragCoord * gyros;
 	vec2 uv = map_to_sphere_uv(fragCoord);
@@ -225,7 +180,8 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	fragColor = vec4(min(col, 1.0),1.0);
 }
 
-//void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-//	mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
-//}
-#pragma use "../emulator.glsl"
+#ifndef _EMULATOR
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+	mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
+}
+#endif
