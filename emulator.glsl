@@ -75,7 +75,7 @@ vec3 emuBackground(vec2 coord) {
 }
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-	vec3 dir = emuRayDirection(45.0, iResolution.xy, fragCoord);
+	vec3 dir = emuRayDirection(36.0, iResolution.xy, fragCoord);
 	vec3 eye = vec3(0.0, 0.0, 5.0);
 
 	float r = iTime;
@@ -102,5 +102,27 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 	// The closest point on the surface to the eyepoint along the view ray
 	vec3 p = eye + dist * dir;
-	mainCube(fragColor, p);
+
+	float grid = 64;
+	float pixSize = .35;
+	bool gridX = mod(p.x + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
+		&& length(vec2(
+			mod(p.y * grid , 1) - .5,
+			mod(p.z * grid , 1) - .5
+		)) < pixSize;
+	bool gridY = mod(p.y + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
+		&& length(vec2(
+			mod(p.x * grid, 1) - .5,
+			mod(p.z * grid, 1) - .5
+		)) < pixSize;
+	bool gridZ = mod(p.z + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
+		&& length(vec2(
+			mod(p.x * grid, 1) - .5,
+			mod(p.y * grid, 1) - .5
+		)) < pixSize;
+	if (gridX || gridY || gridZ) {
+		mainCube(fragColor, round(p * grid - .5) / grid);
+	} else {
+		fragColor = vec4(0);
+	}
 }
