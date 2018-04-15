@@ -10,6 +10,6 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 
 #ifndef _EMULATOR
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-	mainCube(fragColor, cube_map_to_3d(fragCoord) * 2 - 1);
+	mainCube(fragColor, cube_map_to_3d(fragCoord));
 }
 #endif

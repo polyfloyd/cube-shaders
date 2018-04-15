@@ -23,13 +23,14 @@
 
 #define _EMULATOR
 
+#pragma use "libcube.glsl"
+
 // Forward declaration of the function that renders the surface of the cube.
 void mainCube(out vec4 fragColor, in vec3 fragCoord);
 
 const int EMU_MAX_MARCHING_STEPS = 255;
 const float EMU_MIN_DIST = 0.0;
 const float EMU_MAX_DIST = 100.0;
-const float EMU_EPSILON = 0.0001;
 
 float emuCubeSDF(vec3 samplePoint) {
 	return length(max(abs(samplePoint) - vec3(0.5), 0.0));
@@ -43,7 +44,7 @@ float emuShortestDistanceToSurface(vec3 eye, vec3 marchingDirection, float start
 	float depth = start;
 	for (int i = 0; i < EMU_MAX_MARCHING_STEPS; i++) {
 		float dist = emuSceneSDF(eye + depth * marchingDirection);
-		if (dist < EMU_EPSILON) {
+		if (dist < EPSILON) {
 			return depth;
 		}
 		depth += dist;
@@ -62,9 +63,9 @@ vec3 emuRayDirection(float fieldOfView, vec2 size, vec2 fragCoord) {
 
 vec3 emuEstimateNormal(vec3 p) {
 	return normalize(vec3(
-		emuSceneSDF(vec3(p.x + EMU_EPSILON, p.y, p.z)) - emuSceneSDF(vec3(p.x - EMU_EPSILON, p.y, p.z)),
-		emuSceneSDF(vec3(p.x, p.y + EMU_EPSILON, p.z)) - emuSceneSDF(vec3(p.x, p.y - EMU_EPSILON, p.z)),
-		emuSceneSDF(vec3(p.x, p.y, p.z  + EMU_EPSILON)) - emuSceneSDF(vec3(p.x, p.y, p.z - EMU_EPSILON))
+		emuSceneSDF(vec3(p.x + EPSILON, p.y, p.z)) - emuSceneSDF(vec3(p.x - EPSILON, p.y, p.z)),
+		emuSceneSDF(vec3(p.x, p.y + EPSILON, p.z)) - emuSceneSDF(vec3(p.x, p.y - EPSILON, p.z)),
+		emuSceneSDF(vec3(p.x, p.y, p.z  + EPSILON)) - emuSceneSDF(vec3(p.x, p.y, p.z - EPSILON))
 	));
 }
 
@@ -93,7 +94,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	dir = dir * model;
 
 	float dist = emuShortestDistanceToSurface(eye, dir, EMU_MIN_DIST, EMU_MAX_DIST);
-	if (dist > EMU_MAX_DIST - EMU_EPSILON) {
+	if (dist > EMU_MAX_DIST - EPSILON) {
 		// Didn't hit anything, draw the background.
 		float s = max(iResolution.y, iResolution.y);
 		fragColor = vec4(emuBackground(fragCoord / s), 1.0);
@@ -105,22 +106,8 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 	float grid = 64;
 	float pixSize = .35;
-	bool gridX = mod(p.x + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
-		&& length(vec2(
-			mod(p.y * grid , 1) - .5,
-			mod(p.z * grid , 1) - .5
-		)) < pixSize;
-	bool gridY = mod(p.y + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
-		&& length(vec2(
-			mod(p.x * grid, 1) - .5,
-			mod(p.z * grid, 1) - .5
-		)) < pixSize;
-	bool gridZ = mod(p.z + .5 + EMU_EPSILON, 1) < EMU_EPSILON * 2
-		&& length(vec2(
-			mod(p.x * grid, 1) - .5,
-			mod(p.y * grid, 1) - .5
-		)) < pixSize;
-	if (gridX || gridY || gridZ) {
+	vec2 sideCoord = cube_map_to_side(p);
+	if (length(mod(sideCoord * grid, 1) - .5) < pixSize) {
 		mainCube(fragColor, round(p * grid - .5) / grid);
 	} else {
 		fragColor = vec4(0);
