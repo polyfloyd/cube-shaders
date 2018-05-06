@@ -5,7 +5,7 @@
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	float t = iTime * 0.1;
 	vec2 uv = map_to_sphere_uv(fragCoord);
-	fragColor = texture2D(surface, vec2(-uv.x + -t, uv.y));
+	fragColor = texture2D(surface, vec2(-uv.x - t, uv.y));
 }
 
 #ifndef _EMULATOR
