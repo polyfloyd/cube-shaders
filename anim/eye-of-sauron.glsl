@@ -5,7 +5,7 @@
 
 #pragma use "../libcube.glsl"
 #pragma map iChannel0=builtin:RGBA Noise Medium
-//#pragma map gyros=perip_mat4:/dev/ttyUSB0;230400
+#pragma map gyros=perip_mat4:/dev/ttyUSB0;230400?
 
 #define TAU 6.28318530718
 #define MOD2 vec2(.16632,.17369)
@@ -138,8 +138,7 @@ vec3 FlameColour(float f) {
 }
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
-//	fragCoord = fragCoord * gyros;
-	vec2 uv = map_to_sphere_uv(fragCoord);
+	vec2 uv = map_to_sphere_uv(fragCoord * mat3(gyros));
 	uv.x *= 2.0;
 	uv.x += 0.5;
 

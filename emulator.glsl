@@ -24,6 +24,7 @@
 #define _EMULATOR
 
 #pragma use "libcube.glsl"
+#pragma map gyros=perip_mat4:/dev/ttyUSB0;230400?
 
 // Forward declaration of the function that renders the surface of the cube.
 void mainCube(out vec4 fragColor, in vec3 fragCoord);
@@ -79,17 +80,22 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	vec3 dir = emuRayDirection(36.0, iResolution.xy, fragCoord);
 	vec3 eye = vec3(0.0, 0.0, 5.0);
 
-	float r = iTime;
-	mat3 model = mat3(
-		cos(r),  0.0, sin(r),
-		0.0,     1.0, 0.0,
-		-sin(r), 0.0, cos(r)
-	);
-	model = model * mat3(
-		1.0, 0.0,     0.0,
-		0.0, cos(r),  sin(r),
-		0.0, -sin(r), cos(r)
-	);
+	mat3 model = mat3(gyros);
+	if (model * vec3(1) == vec3(1)) {
+		float r = iTime * .5;
+		mat3 mx = mat3(
+			1.0, 0.0,     0.0,
+			0.0, cos(r),  sin(r),
+			0.0, -sin(r), cos(r)
+		);
+		mat3 my = mat3(
+			cos(r),  0.0, sin(r),
+			0.0,     1.0, 0.0,
+			-sin(r), 0.0, cos(r)
+		);
+		model = my * mx;
+	}
+
 	eye = eye * model;
 	dir = dir * model;
 

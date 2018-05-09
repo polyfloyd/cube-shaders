@@ -1,6 +1,7 @@
 #pragma use "../libcube.glsl"
 #pragma use "../libcolor.glsl"
 #pragma map noise=builtin:RGBA Noise Small
+#pragma map gyros=perip_mat4:/dev/ttyUSB0;230400?
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	float t = iTime * .8;
@@ -26,7 +27,7 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 			0.0,      0.0,     1.0
 		);
 
-		mat3 rotation = mx * my * mz;
+		mat3 rotation = mx * my * mz * mat3(gyros);
 		vec3 p = normalize(fragCoord * rotation);
 
 		vec3 color = hsvToRGB(vec3(i / 32., 1, 1));
