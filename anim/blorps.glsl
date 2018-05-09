@@ -1,8 +1,9 @@
 #pragma use "../libcube.glsl"
+#pragma use "../libcolor.glsl"
 #pragma map noise=builtin:RGBA Noise Small
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
-	float t = iTime * 1.2;
+	float t = iTime * .3;
 	fragColor.rgb = vec3(0);
 
 	for (int i = 0; i < 64; i++) {
@@ -28,19 +29,10 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 		mat3 rotation = mx * my * mz;
 		vec3 p = normalize(fragCoord * rotation);
 
-		vec3 color;
-		float j = mod(i, 3);
-		if (j == 0) {
-			color = vec3(1, 0, 0);
-		} else if (j == 1) {
-			color = vec3(0, 1, 0);
-		} else {
-			color = vec3(0, 0, 1);
-		}
-
+		vec3 color = hsvToRGB(vec3(i / 32., 1, 1));
 		vec3 anchor = vec3(1, 0, 0);
-		fragColor.rgb += color * clamp(1 - length(anchor - p) * 3, 0, 1);
-		fragColor.rgb += vec3(1) * clamp(1 - length(anchor - p) * 16, 0, 1);
+		fragColor.rgb += color * clamp(1 - length(anchor - p) * 4, 0, 1);
+		fragColor.rgb += vec3(1) * clamp(1 - length(anchor - p) * 12, 0, 1);
 	}
 }
 
