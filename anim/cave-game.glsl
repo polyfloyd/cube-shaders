@@ -34,7 +34,7 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 
 	vec2 uv = cube_map_to_side(fragCoord) + .5;
 	uv = vec2(uv.x, 1 - uv.y);
-	float n = iTime * .5;
+	float n = iTime * 1.5;
 
 	int bi = int(mod(n, pos.length()));
 	int ai = int(mod(n + 1, pos.length()));

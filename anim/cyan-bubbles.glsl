@@ -25,8 +25,8 @@ float calcRowRad(int rowNum){
     //          but in some reason it don't work. Any ideas?
     //rad += step(0., sin(iTime)) * step(0., cos(iTime)) * .066;
     {
-        float s = sin(iTime * 4.);
-        float c = cos(iTime * 4.);
+        float s = sin(iTime * 12.);
+        float c = cos(iTime * 12.);
         if(s > 0. && c > 0.)
             rad += s * .066;
     }

@@ -3,7 +3,7 @@
 #pragma map noise=builtin:RGBA Noise Small
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
-	float t = iTime * .3;
+	float t = iTime * .8;
 	fragColor.rgb = vec3(0);
 
 	for (int i = 0; i < 64; i++) {
