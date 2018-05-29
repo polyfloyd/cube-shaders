@@ -57,17 +57,21 @@ vec3 cube_map_to_3d(vec2 pos) {
 	return p - .5;
 }
 
+// Maps a 3D position to a 2D position on a virtual sphere that wraps around
+// the origin. The poles are aligned with the Z-axis.
+//
+// The coordinates are both in the range of [-0.5, 0.5].
 vec2 map_to_sphere_uv(vec3 vert) {
 	// Derived from https://stackoverflow.com/questions/25782895/what-is-the-difference-from-atany-x-and-atan2y-x-in-opengl-glsl/25783017
 	float radius = distance(vec3(0), vert);
-	float theta = atan(vert.y, vert.x + 1E-18);
+	float theta = atan(vert.y, vert.x + 1E-18); // in [-pi,pi]
 	float phi = acos(vert.z / radius); // in [0,pi]
-	return vec2(theta / (PI * 2), phi / PI);
+	return vec2(theta / PI * .5, phi / PI);
 }
 
 // Maps a uniform 3D position to an uniform 2D position on the current side.
 //
-// The coordinages are in the range of (-.5, .5).
+// The coordinates are in the range of (-.5, .5).
 //
 // TODO: define orientation.
 vec2 cube_map_to_side(vec3 p) {
