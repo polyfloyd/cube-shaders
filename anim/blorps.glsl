@@ -4,7 +4,7 @@
 #pragma map gyros=perip_mat4:/dev/ttyUSB0;230400?
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
-	float t = iTime * .8;
+	float t = iTime * .8 + 10;
 	fragColor.rgb = vec3(0);
 
 	for (int i = 0; i < 64; i++) {
