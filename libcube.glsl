@@ -7,51 +7,51 @@ const float EPSILON = 0.0001;
 vec3 cube_map_to_3d(vec2 pos) {
 	vec3 p = vec3(0);
 	if (pos.x < 64 && pos.y < 64) {
-		// top
+		// front
 		p = vec3(
-			1.0 - pos.y / 64.0,
-			1.0 - pos.x / 64.0,
-			1.0
+			pos.x / 64,
+			0,
+			pos.y / 64
 		);
 
 	} else if (pos.x < 64 && pos.y < 128) {
-		// front
+		// back
 		p = vec3(
-			pos.x / 64.0,
-			1.0,
-			(pos.y - 64.0) / 64.0
+			1 - pos.x / 64,
+			1,
+			(pos.y - 64) / 64
 		);
 
 	} else if (pos.x < 64 && pos.y < 192) {
-		// back
+		// top
 		p = vec3(
-			1.0 - pos.x / 64.0,
-			0.0,
-			(pos.y - 128.0) / 64.0
+			(pos.y - 128) / 64,
+			1 - pos.x / 64,
+			1
 		);
 
 	} else if (pos.x < 128 && pos.y < 64) {
-		// bottom
+		// right
 		p = vec3(
-			1.0 - pos.y / 64.0,
-			(pos.x - 64.0) / 64.0,
-			0.0
+			1,
+			(pos.x - 64) / 64,
+			pos.y / 64
 		);
 
 	} else if (pos.x < 128 && pos.y < 128) {
-		// right
+		// left
 		p = vec3(
-			1.0,
-			1.0 - (pos.x - 64.0) / 64.0,
-			(pos.y - 64.0) / 64.0
+			0,
+			1 - (pos.x - 64) / 64,
+			(pos.y - 64) / 64
 		);
 
 	} else if (pos.x < 128 && pos.y < 192) {
-		// left
+		// bottom
 		p = vec3(
-			0.0,
-			(pos.x - 64.0) / 64.0,
-			(pos.y - 128.0) / 64.0
+			(pos.y - 128) / 64,
+			(pos.x - 64) / 64,
+			0
 		);
 	}
 	return p - .5;
