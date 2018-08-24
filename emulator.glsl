@@ -83,7 +83,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	vec3 eye = vec3(0.0, 0.0, 5.0);
 
 	mat3 model = mat3(gyros);
-	if (model * vec3(1) == vec3(1)) {
+	if (model == mat3(1)) {
 		float r = iTime * .5;
 		mat3 mx = mat3(
 			1.0, 0.0,     0.0,
