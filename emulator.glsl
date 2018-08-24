@@ -29,6 +29,8 @@
 // Forward declaration of the function that renders the surface of the cube.
 void mainCube(out vec4 fragColor, in vec3 fragCoord);
 
+#define EMU_GRID 64
+
 const int EMU_MAX_MARCHING_STEPS = 255;
 const float EMU_MIN_DIST = 0.0;
 const float EMU_MAX_DIST = 100.0;
@@ -110,7 +112,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	// The closest point on the surface to the eyepoint along the view ray
 	vec3 p = eye + dist * dir;
 
-	float grid = 64;
+#ifndef EMU_GRID
+	mainCube(fragColor, p);
+#else
+	float grid = EMU_GRID;
 	float pixSize = .35;
 	vec2 sideCoord = cube_map_to_side(p);
 	if (length(mod(sideCoord * grid, 1) - .5) < pixSize) {
@@ -118,4 +123,5 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 	} else {
 		fragColor = vec4(0);
 	}
+#endif
 }
