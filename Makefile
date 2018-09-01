@@ -7,6 +7,7 @@ else
 
 	ifndef NOCOLOR
 		COLOR_COMPILE := \x1b[32;1m
+		COLOR_GIF     := \x1b[34;1m
 		COLOR_RGB     := \x1b[31;1m
 		COLOR_VIDEO   := \x1b[35;1m
 		COLOR_RESET   := \x1b[0m
@@ -16,6 +17,9 @@ endif
 
 SHELL=/bin/bash
 
+GIFFPS=16
+GIFGEOM=640x360
+GIFSECONDS=3
 RGBFPS=60
 RGBGEOM=128x192
 RGBSECONDS=8
@@ -27,21 +31,32 @@ SHADY=shady
 FFMPEG=ffmpeg
 
 SRCDIR := ./anim
+GIFDIR := ./gif
 RGBDIR := ./rgb
 VIDEODIR := ./video
 
 SHADERFILES := $(shell find $(SRCDIR) -name '*.glsl')
-RGBFILES   := $(SHADERFILES:$(SRCDIR)/%.glsl=$(RGBDIR)/%-${RGBGEOM}-${RGBFPS}fps-${RGBSECONDS}s.rgb.gz)
-VIDEOFILES := $(SHADERFILES:$(SRCDIR)/%.glsl=$(VIDEODIR)/%.mp4)
+GIFFILES    := $(SHADERFILES:$(SRCDIR)/%.glsl=$(GIFDIR)/%.gif)
+RGBFILES    := $(SHADERFILES:$(SRCDIR)/%.glsl=$(RGBDIR)/%-${RGBGEOM}-${RGBFPS}fps-${RGBSECONDS}s.rgb.gz)
+VIDEOFILES  := $(SHADERFILES:$(SRCDIR)/%.glsl=$(VIDEODIR)/%.mp4)
 
 -include Makefile.local
 
-.PHONY: all rgb video
+.PHONY: all gif rgb video
 
-all: rgb video
+all: gif rgb video
 
+gif: $(GIFFILES)
 rgb: $(RGBFILES)
 video: $(VIDEOFILES)
+
+$(GIFDIR)/%.gif: $(SRCDIR)/%.glsl
+	$(E)" [$(COLOR_VIDEO)GIF$(COLOR_RESET)] $@"
+	$(Q)mkdir -p `dirname $@`
+	$(Q)$(SHADY) -i emulator.glsl -i $< -g $(GIFGEOM) -framerate $(GIFFPS) \
+		-duration $(GIFSECONDS) -ofmt rgb24 | \
+		$(FFMPEG) -f rawvideo -pixel_format rgb24 -video_size $(GIFGEOM) \
+		-framerate $(GIFFPS) -t $(GIFSECONDS) -i - -threads 8 -y $@
 
 $(RGBDIR)/%-${RGBGEOM}-${RGBFPS}fps-${RGBSECONDS}s.rgb.gz: $(SRCDIR)/%.glsl
 	$(E)" [$(COLOR_RGB)RGB$(COLOR_RESET)] $@"

@@ -31,3 +31,11 @@ Quick test:
 shady -g 1366x768 -i emulator.glsl -i anim/globe.glsl -ofmt rgb24 -framerate 20 \
   | ffplay -loglevel quiet -f rawvideo -pixel_format rgb24 -video_size 1366x768 -framerate 20 -i -
 ```
+
+## Rendered
+![Blorps](gif/blorps.gif)
+![Fuji VHS](gif/fuji-vhs.gif)
+![Nyan](gif/nyan.gif)
+![RGB](gif/rgb.gif)
+![Cave Game](gif/cave-game.gif)
+![Globe](gif/globe.gif)
