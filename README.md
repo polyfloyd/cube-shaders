@@ -36,6 +36,8 @@ shady -g 1366x768 -i emulator.glsl -i anim/globe.glsl -ofmt rgb24 -framerate 20 
 ![Blorps](gif/blorps.gif)
 ![Fuji VHS](gif/fuji-vhs.gif)
 ![Nyan](gif/nyan.gif)
+![Tesseract](gif/tesseract.gif)
+![Voronoi 3D](gif/voronoi-3d.gif)
 ![RGB](gif/rgb.gif)
 ![Cave Game](gif/cave-game.gif)
 ![Globe](gif/globe.gif)
