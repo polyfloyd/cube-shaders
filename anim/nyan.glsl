@@ -99,7 +99,7 @@ vec4 splarkles(vec3 fragCoord, float time) {
 
 		vec3 p = fragCoord * mx * my * mz;
 		float dist = 1.5 - distance(vec3(0.5, 0, 0), normalize(p)) + mod(t, radius);
-		vec2 s = cube_map_to_side(p);
+		vec2 s = cube_map_to_side(p).xy;
 		float angrad = atan(s.x, s.y) / PI;
 
 		a += (1 - step(1, dist - thickness)) // ring, inner

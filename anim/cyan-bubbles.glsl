@@ -61,7 +61,7 @@ float clr(float r, float a){
 //}
 
 void mainCube(out vec4 fragColor, vec3 fragCoord) {
-    vec2 st = cube_map_to_side(fragCoord) * 1.5;
+    vec2 st = cube_map_to_side(fragCoord).xy * 1.5;
     float delta = PI/COLS*2.;
     float l = length(st);
     float a = mod(atan(st.y, st.x), delta) - delta/4.;

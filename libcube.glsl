@@ -71,18 +71,23 @@ vec2 map_to_sphere_uv(vec3 vert) {
 
 // Maps a uniform 3D position to an uniform 2D position on the current side.
 //
-// The coordinates are in the range of (-.5, .5).
+// The X and Y of the returned vector are the coordinates and are in the range
+// of (-.5, .5).
+// 
+// Z is the remaining axis and is constant for a single side.
+//
+// W is a unique identifier for the side.
 //
 // TODO: define orientation.
-vec2 cube_map_to_side(vec3 p) {
+vec4 cube_map_to_side(vec3 p) {
 	if (abs(p.x) >= .5 - EPSILON) {
-		return vec2(p.y, p.z);
+		return vec4(p.y, p.z, p.x, step(p.x, 0));
 	}
 	if (abs(p.y) >= .5 - EPSILON) {
-		return vec2(p.x, p.z);
+		return vec4(p.x, p.z, p.y, step(p.y, 0) + 2);
 	}
 	if (abs(p.z) >= .5 - EPSILON) {
-		return vec2(p.x, p.y);
+		return vec4(p.x, p.y, p.z, step(p.z, 0) + 4);
 	}
-	return vec2(0);
+	return vec4(0, 0, 0, -1);
 }

@@ -32,7 +32,7 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	pos[16] = vec2(0, 1);
 	pos[17] = vec2(2, 0);
 
-	vec2 uv = cube_map_to_side(fragCoord) + .5;
+	vec2 uv = cube_map_to_side(fragCoord).xy + .5;
 	uv = vec2(uv.x, 1 - uv.y);
 	float n = iTime * 1.5;
 

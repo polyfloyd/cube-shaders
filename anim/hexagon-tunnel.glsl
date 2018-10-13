@@ -176,7 +176,7 @@ vec3 cv = normalize( cross(cu,cw) );
 }
 
 void mainCube(out vec4 fragColor, vec3 fragCoord) {
-    vec2 p = cube_map_to_side(fragCoord) * 3.;
+    vec2 p = cube_map_to_side(fragCoord).xy * 3.;
 
 	// camera
 	vec3 ro = vec3(0., 0.,iTime );
