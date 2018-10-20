@@ -1,5 +1,6 @@
 #pragma use "../libcube.glsl"
 #pragma use "../libcolor.glsl"
+#pragma map prev=builtin:Back Buffer
 #pragma map noise=builtin:RGBA Noise Small
 #pragma map gyros=perip_mat4:/dev/ttyUSB0;230400?
 
@@ -7,7 +8,8 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 	float t = iTime * .8 + 10;
 	fragColor.rgb = vec3(0);
 
-	for (int i = 0; i < 64; i++) {
+	vec3 accum = vec3(0);
+	for (int i = 0; i < 32; i++) {
 		float rx = t * length(texture2D(noise, vec2(i / 64., 0.0)));
 		float ry = t * length(texture2D(noise, vec2(i / 64., 0.1)));
 		float rz = t * length(texture2D(noise, vec2(i / 64., 0.2)));
@@ -32,9 +34,14 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 
 		vec3 color = hsvToRGB(vec3(i / 32., 1, 1));
 		vec3 anchor = vec3(1, 0, 0);
-		fragColor.rgb += color * clamp(1 - length(anchor - p) * 4, 0, 1);
-		fragColor.rgb += vec3(1) * clamp(1 - length(anchor - p) * 12, 0, 1);
+		accum += color * clamp(1 - length(anchor - p) * 4, 0, 1);
+		accum += vec3(1) * clamp(1 - length(anchor - p) * 12, 0, 1);
 	}
+
+	// Using the back buffer breaks the emulator, but the effect on the cube is
+	// pretty cool.
+	vec3 p = texture2D(prev, gl_FragCoord.xy / iResolution.xy).rgb;
+	fragColor.rgb = max(p - .02, accum);
 }
 
 #ifndef _EMULATOR
