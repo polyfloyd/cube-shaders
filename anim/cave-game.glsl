@@ -1,18 +1,20 @@
 #pragma use "../libcube.glsl"
-#pragma map noise=builtin:RGBA Noise Small
 // Pulled from Minecraft.jar, not incuded because I don't own the copyright.
 #pragma map blocks=image:../img/terrain.png
 
-vec2 pos[18];
+float rand(float v) {
+	return fract(sin(v) * 43758.5453123);
+}
 
 float transition(vec2 uv, float n) {
 	float r = 4;
 	float perimiter = mod(n, 1) - length(uv - .5) * sqrt(2) * 1/(1+1/r);
-	float jitter = texture2D(noise, uv * .5 + n).x / r - 1/r;
+	float jitter = rand(uv.x * uv.y) / r * .7 - 1/r;
 	return perimiter + jitter;
 }
 
 void mainCube(out vec4 fragColor, in vec3 fragCoord) {
+	vec2 pos[18];
 	pos[0] = vec2(0, 3);
 	pos[1] = vec2(1, 1);
 	pos[2] = vec2(7, 0);
@@ -34,7 +36,7 @@ void mainCube(out vec4 fragColor, in vec3 fragCoord) {
 
 	vec2 uv = cube_map_to_side(fragCoord).xy + .5;
 	uv = vec2(uv.x, 1 - uv.y);
-	float n = iTime * 1.5;
+	float n = iTime * 1.5 + 1e3;
 
 	int bi = int(mod(n, pos.length()));
 	int ai = int(mod(n + 1, pos.length()));
