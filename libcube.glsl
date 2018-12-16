@@ -81,13 +81,13 @@ vec2 map_to_sphere_uv(vec3 vert) {
 // TODO: define orientation.
 vec4 cube_map_to_side(vec3 p) {
 	if (abs(p.x) >= .5 - EPSILON) {
-		return vec4(p.y, p.z, p.x, step(p.x, 0));
+		return vec4(p.y * sign(p.x), p.z, p.x, step(p.x, 0));
 	}
 	if (abs(p.y) >= .5 - EPSILON) {
-		return vec4(p.x, p.z, p.y, step(p.y, 0) + 2);
+		return vec4(p.x * sign(-p.y), p.z, p.y, step(p.y, 0) + 2);
 	}
 	if (abs(p.z) >= .5 - EPSILON) {
-		return vec4(p.x, p.y, p.z, step(p.z, 0) + 4);
+		return vec4(p.x * sign(p.z), p.y, p.z, step(p.z, 0) + 4);
 	}
 	return vec4(0, 0, 0, -1);
 }
